@@ -92,6 +92,12 @@
     <Compile Include="MachO\Command.cs" />
     <Compile Include="MachO\SymbolTable.cs" />
     <Compile Include="MachO\Symbol.cs" />
+    <Compile Include="PE\PE.cs" />
+    <Compile Include="PE\ImageFileHeader.cs" />
+    <Compile Include="PE\ImageExportDirectory.cs" />
+    <Compile Include="PE\ImageSectionHeader.cs" />
+    <Compile Include="PE\NamesTable.cs" />
+    <Compile Include="PE\PEReader.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
