@@ -23,7 +23,7 @@ namespace ELFSharp.ELF
 				elf = new ELF<uint>(fileName);
 				return true;
 			case Class.Bit64:
-				elf = new ELF<long>(fileName);
+				elf = new ELF<ulong>(fileName);
 				return true;
 			default:
 				elf = null;
