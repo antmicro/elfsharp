@@ -32,7 +32,7 @@ namespace ELFSharp.PE
             reader.BaseStream.Seek(0x4, SeekOrigin.Current); // skip PE signature
 
             fileHeader = StreamToStructure<ImageFileHeader>(reader);
-            reader.BaseStream.Seek(0xE0, SeekOrigin.Current); // skip optional header
+            reader.BaseStream.Seek(fileHeader.Is32BitHeader ? 0xE0 : 0xF0, SeekOrigin.Current); // skip optional header
 
             sectionHeaders = new ImageSectionHeader[fileHeader.NumberOfSections];
             for(var i = 0; i < sectionHeaders.Length; i++)
