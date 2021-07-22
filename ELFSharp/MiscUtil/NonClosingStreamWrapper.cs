@@ -141,6 +141,7 @@ namespace MiscUtil.IO
 			closed = true;			
 		}
 
+#if !NET
 		/// <summary>
 		/// Throws a NotSupportedException.
 		/// </summary>
@@ -150,7 +151,7 @@ namespace MiscUtil.IO
 		{
 			throw new NotSupportedException();
 		}
-
+#endif
 		/// <summary>
 		/// Waits for the pending asynchronous read to complete.
 		/// </summary>
