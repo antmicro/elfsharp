@@ -20,7 +20,7 @@ namespace ELFSharp.ELF
 				throw new ArgumentException("Given file is not proper ELF file.");
 			}
             stream = GetNewStream();
-            ReadHeader();            
+            ReadHeader();
             ReadStringTable();
             ReadSections();
             ReadSegmentHeaders();
@@ -37,12 +37,12 @@ namespace ELFSharp.ELF
         public T EntryPoint { get; private set; }
 
         public T MachineFlags { get; private set; }
-     
+
         public bool HasSegmentHeader
         {
             get { return segmentHeaderOffset != 0; }
         }
-     
+
         public bool HasSectionHeader
         {
             get { return sectionHeaderOffset != 0; }
@@ -52,7 +52,7 @@ namespace ELFSharp.ELF
         {
             get { return stringTableIndex != 0; }
         }
-     
+
         public IEnumerable<Segment<T>> Segments
         {
             get { return new ReadOnlyCollection<Segment<T>>(segments); }
@@ -194,7 +194,7 @@ namespace ELFSharp.ELF
                 case SectionType.HashTable:
                     goto default;
                 case SectionType.Dynamic:
-                    goto default;                    
+                    goto default;
                 case SectionType.Note:
                     returned = new NoteSection<T>(header, Class, readerSource);
                     break;
@@ -223,7 +223,7 @@ namespace ELFSharp.ELF
                 FileShare.Read
             );
         }
-     
+
         private void ReadSegmentHeaders()
         {
             segments = new List<Segment<T>>(segmentHeaderEntryCount);
@@ -300,7 +300,7 @@ namespace ELFSharp.ELF
         private void ReadStringTable()
         {
             if(!HasSectionHeader || !HasSectionsStringTable)
-            {                
+            {
                 return;
             }
             var header = ReadSectionHeader(stringTableIndex);
@@ -407,7 +407,7 @@ namespace ELFSharp.ELF
                         "Given ELF file uses unknown endianess {0}.",
                         endianessByte
                     ));
-            }            
+            }
             reader.ReadBytes(10); // padding bytes of section e_ident
         }
 
