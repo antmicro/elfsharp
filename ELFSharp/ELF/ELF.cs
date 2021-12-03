@@ -196,7 +196,17 @@ namespace ELFSharp.ELF
                 case SectionType.Dynamic:
                     goto default;
                 case SectionType.Note:
-                    returned = new NoteSection<T>(header, Class, readerSource);
+                    // Only attempt to parse note sections with correct alignment. SOF uses
+                    // note sections with 1024 byte alignment for firmware metadata, which
+                    // is used by its build tools and does not contain actual ELF notes.
+                    if(header.Alignment == 4 || header.Alignment == 8)
+                    {
+                        returned = new NoteSection<T>(header, Class, readerSource);
+                    }
+                    else
+                    {
+                        goto default;
+                    }
                     break;
                 case SectionType.NoBits:
                     goto default;
