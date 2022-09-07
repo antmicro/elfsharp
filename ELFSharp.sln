@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ELFSharp", "ELFSharp\ELFSha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ELFSharp.LinqBridge", "ELFSharp\ELFSharp.LinqBridge.csproj", "{6169D4ED-92C8-469C-ABF4-FF0FA29D557C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DWARF", "DWARF\DWARF.csproj", "{039C1D3F-9E52-4EBF-AB37-E6315DD8AC56}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{6169D4ED-92C8-469C-ABF4-FF0FA29D557C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6169D4ED-92C8-469C-ABF4-FF0FA29D557C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6169D4ED-92C8-469C-ABF4-FF0FA29D557C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{039C1D3F-9E52-4EBF-AB37-E6315DD8AC56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{039C1D3F-9E52-4EBF-AB37-E6315DD8AC56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{039C1D3F-9E52-4EBF-AB37-E6315DD8AC56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{039C1D3F-9E52-4EBF-AB37-E6315DD8AC56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = ELFSharp\ELFSharp.csproj
@@ -27,12 +33,10 @@ Global
 		$1.DirectoryNamespaceAssociation = PrefixedHierarchical
 		$1.ResourceNamePolicy = FileName
 		$0.TextStylePolicy = $2
-		$2.FileWidth = 120
 		$2.NoTabsAfterNonTabs = True
 		$2.EolMarker = Unix
-		$2.inheritsSet = VisualStudio
-		$2.inheritsScope = text/plain
 		$2.scope = text/x-csharp
+		$2.TabsToSpaces = True
 		$0.CSharpFormattingPolicy = $3
 		$3.AnonymousMethodBraceStyle = NextLine
 		$3.PropertyBraceStyle = NextLine
@@ -61,19 +65,30 @@ Global
 		$3.LockParentheses = False
 		$3.UsingParentheses = False
 		$3.SpacesBeforeBrackets = False
-		$3.inheritsSet = Mono
-		$3.inheritsScope = text/x-csharp
 		$3.scope = text/x-csharp
+		$3.IndentSwitchSection = False
+		$3.NewLinesForBracesInProperties = False
+		$3.NewLinesForBracesInAccessors = False
+		$3.NewLinesForBracesInAnonymousMethods = False
+		$3.NewLinesForBracesInControlBlocks = False
+		$3.NewLinesForBracesInAnonymousTypes = False
+		$3.NewLinesForBracesInObjectCollectionArrayInitializers = False
+		$3.NewLinesForBracesInLambdaExpressionBody = False
+		$3.NewLineForElse = False
+		$3.NewLineForCatch = False
+		$3.NewLineForFinally = False
+		$3.NewLineForMembersInObjectInit = False
+		$3.NewLineForMembersInAnonymousTypes = False
+		$3.NewLineForClausesInQuery = False
+		$3.SpacingAfterMethodDeclarationName = True
+		$3.SpaceAfterMethodCallName = True
+		$3.SpaceBeforeOpenSquareBracket = True
 		$0.TextStylePolicy = $4
-		$4.FileWidth = 120
 		$4.NoTabsAfterNonTabs = True
 		$4.EolMarker = Unix
-		$4.inheritsSet = VisualStudio
-		$4.inheritsScope = text/plain
 		$4.scope = text/plain
+		$4.TabsToSpaces = True
 		$0.StandardHeader = $5
-		$5.Text = 
-		$5.IncludeInNewFiles = True
 		$0.NameConventionPolicy = $6
 		$6.Rules = $7
 		$7.NamingRule = $8
