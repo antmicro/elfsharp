@@ -5,6 +5,7 @@
 // Full license text is available in 'licenses/MIT.txt'.
 //
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using ELFSharp.ELF;
@@ -33,12 +34,6 @@ namespace DWARF
             return dwarf;
         }
 
-        public AbbreviationsTable AbbreviationsTable { get; private set; }
-        public DebugInfo DebugInfo { get; private set; }
-        public Strings Strings { get; private set; }
-        public Strings LineStrings { get; private set; }
-        public DebugLines DebugLines { get; private set; }
-
         private static byte[] GetSectionContent(IELF elf, string name, bool required = true)
         {
             var section = elf.Sections.SingleOrDefault(x => x.Name == name);
@@ -65,5 +60,36 @@ namespace DWARF
 
             return contents;
         }
+
+        public bool TryGetLineForPC(ulong pc, out Line line)
+        {
+            if(pcToLineCache.TryGetValue(pc, out line))
+            {
+                return true;
+            }
+
+            foreach(var compilationUnit in DebugInfo.CompilationUnits)
+            {
+                var localLine = compilationUnit.Lines.Lines.FirstOrDefault(x => x.Address == pc);
+                if(!localLine.Equals(default(Line)))
+                {
+                    pcToLineCache[pc] = localLine;
+
+                    line = localLine;
+                    return true;
+                }
+            }
+
+            line = default(Line);
+            return false;
+        }
+
+        public AbbreviationsTable AbbreviationsTable { get; private set; }
+        public DebugInfo DebugInfo { get; private set; }
+        public Strings Strings { get; private set; }
+        public Strings LineStrings { get; private set; }
+        public DebugLines DebugLines { get; private set; }
+
+        private readonly Dictionary<ulong, Line> pcToLineCache = new Dictionary<ulong, Line>();
     }
 }

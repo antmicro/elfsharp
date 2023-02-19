@@ -70,9 +70,13 @@ namespace DWARF
         {
             get
             {
-                // TODO: fix casting
-                var lineCursor = (ulong)Root.GetAttributeLinePTR(AttributeName.DW_AT_stmt_list);
-                return dlines.GetPart(lineCursor, this);
+                if(dlinesPart == null)
+                {
+                    // TODO: fix casting
+                    var lineCursor = (ulong)Root.GetAttributeLinePTR(AttributeName.DW_AT_stmt_list);
+                    dlinesPart = dlines.GetPart(lineCursor, this);
+                }
+                return dlinesPart;
             }
         }
 
@@ -80,5 +84,6 @@ namespace DWARF
 
         private AbbreviationsTable abbrev;
         private DebugLines dlines;
+        private DebugLines.DebugLinesPart dlinesPart;
     }
 }

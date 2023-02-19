@@ -26,6 +26,7 @@ namespace DWARF
             copy.PrologueEnd = this.PrologueEnd;
             copy.Isa = this.Isa;
             copy.Discriminator = this.Discriminator;
+            copy.CompilationUnit = this.CompilationUnit;
 
             return copy;
         }
@@ -53,6 +54,8 @@ namespace DWARF
                 : (uint?)(File - 1);
         }
 
+        public string FilePath => CompilationUnit.Lines.Files[(int)GetFileIdx()].Path;
+
         // REV: properites or private fields
         public ulong Address;
         public int LineNumber;
@@ -66,5 +69,6 @@ namespace DWARF
         public ulong OpIndex;
         public uLeb128 Discriminator;
         public uint File;
+        public CompilationUnit CompilationUnit;
     }
 }

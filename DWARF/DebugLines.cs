@@ -23,8 +23,7 @@ namespace DWARF
         public DebugLinesPart GetPart(ulong cursor, CompilationUnit cu)
         {
             DebugLinesPart part;
-            // TODO: caching seem to break things, check out why
-            //if(!cache.TryGetValue(cursor, out part))
+            if(!cache.TryGetValue(cursor, out part))
             {
                 part = new DebugLinesPart(sectionContent, strings, lineStrings, ref cursor, cu);
                 cache[cursor] = part;
@@ -46,7 +45,7 @@ namespace DWARF
                 Lines = new List<Line>();
 
                 ParseHeader(ref cursor, cu);
-                ReadBytecode(ref cursor);
+                ReadBytecode(ref cursor, cu);
             }
 
             // REV: change into enumerable?
@@ -168,9 +167,10 @@ namespace DWARF
                 }
             }
 
-            public void ReadBytecode(ref ulong cursor)
+            public void ReadBytecode(ref ulong cursor, CompilationUnit cu)
             {
                 var state = new Line();
+                state.CompilationUnit = cu;
                 state.SetDefaults(DefaultIsStmt);
 
                 while(cursor < Start + Length)
