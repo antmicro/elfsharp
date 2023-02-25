@@ -71,6 +71,15 @@ namespace DWARF
             public uLeb128[] FileEntryFormat { get; private set; }
             public CompilationUnit CompilationUnit { get; private set; }
 
+            private void AddToLines(Line l)
+            {
+                if(Lines.Count > 0 && Lines[Lines.Count - 1].Address == l.Address)
+                {
+                    Lines.RemoveAt(Lines.Count - 1);
+                }
+                Lines.Add(l);
+            }
+
             private void ParseHeader(ref ulong cursor, CompilationUnit cu)
             {
                 this.Length = Parser.ReadInitialLength(sectionContent, ref cursor, out var dwarf64);
@@ -194,7 +203,7 @@ namespace DWARF
                         state.OpIndex = newOpIndex;
 
                         var clone = (Line)state.Clone();
-                        Lines.Add(clone);
+                        AddToLines(clone);
 
                         state.BasicBlock = false;
                         state.PrologueEnd = false;
@@ -221,7 +230,7 @@ namespace DWARF
                     case StandardLineOpcodes.DW_LNS_copy:
                     {
                         var clone = (Line)state.Clone();
-                        Lines.Add(clone);
+                        AddToLines(clone);
 
                         state.BasicBlock = false;
                         state.PrologueEnd = false;
@@ -319,7 +328,7 @@ namespace DWARF
                     {
                         state.EndSequence = true;
                         var copy = (Line)state.Clone();
-                        Lines.Add(copy);
+                        AddToLines(copy);
 
                         state.SetDefaults(DefaultIsStmt);
                         break;
