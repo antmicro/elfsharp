@@ -5,6 +5,7 @@
 // Full license text is available in 'licenses/MIT.txt'.
 //
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace DWARF
@@ -46,6 +47,35 @@ namespace DWARF
 
                 ParseHeader(ref cursor, cu);
                 ReadBytecode(ref cursor, cu);
+            }
+
+            public bool TryFindMatch(ulong pc, out Line line)
+            {
+                if(Lines.Count == 0)
+                {
+                    line = default(Line);
+                    return false;
+                }
+
+                var idx = Array.BinarySearch(Lines.Select(x => x.Address).ToArray(), pc);
+                if(idx >= 0)
+                {
+                    line = Lines[idx];
+                    return true;
+                }
+
+                // this is how `BinarySearch` encodes additional information in case of a failure:
+                // idx is the bitwise complement of an index of the first entry larger than `pc`
+                idx = ~idx;
+
+                if(idx == 0)
+                {
+                    line = default(Line);
+                    return false;
+                }
+
+                line = Lines[idx - 1];
+                return true;
             }
 
             // REV: change into enumerable?

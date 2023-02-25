@@ -70,12 +70,9 @@ namespace DWARF
 
             foreach(var compilationUnit in DebugInfo.CompilationUnits)
             {
-                var localLine = compilationUnit.Lines.Lines.FirstOrDefault(x => x.Address == pc);
-                if(!localLine.Equals(default(Line)))
+                if(compilationUnit.Lines.TryFindMatch(pc, out line))
                 {
-                    pcToLineCache[pc] = localLine;
-
-                    line = localLine;
+                    pcToLineCache[pc] = line;
                     return true;
                 }
             }
