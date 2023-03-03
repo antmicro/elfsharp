@@ -68,13 +68,29 @@ namespace DWARF
                 return true;
             }
 
+            Line? fallbackMatch = null;
             foreach(var compilationUnit in DebugInfo.CompilationUnits)
             {
                 if(compilationUnit.Lines.TryFindMatch(pc, out line))
                 {
-                    pcToLineCache[pc] = line;
-                    return true;
+                    if(line.Address == pc)
+                    {
+                        // exact match
+                        pcToLineCache[pc] = line;
+                        return true;
+                    }
+
+                    if(!fallbackMatch.HasValue || line.Address > fallbackMatch.Value.Address)
+                    {
+                        fallbackMatch = line;
+                    }
                 }
+            }
+
+            if(fallbackMatch.HasValue)
+            {
+                line = fallbackMatch.Value;
+                return true;
             }
 
             line = default(Line);
