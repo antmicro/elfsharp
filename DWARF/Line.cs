@@ -5,6 +5,7 @@
 // Full license text is available in 'licenses/MIT.txt'.
 //
 using System;
+using System.IO;
 using System.Collections.Generic;
 
 namespace DWARF
@@ -46,15 +47,21 @@ namespace DWARF
             OpIndex = 0;
         }
 
-        // REV: turn into a property?
-        public uint? GetFileIdx()
+        public string FilePath
         {
-            return (File == 0)
-                ? null
-                : (uint?)(File - 1);
-        }
+            get
+            {
+                if(File == 0)
+                {
+                    return "[unknown]";
+                }
 
-        public string FilePath => CompilationUnit.Lines.Files[(int)GetFileIdx()].Path;
+                var f = CompilationUnit.Lines.Files[(int)(File - 1)];
+                return f.DirectoryIndex != 0
+                    ? Path.Combine(CompilationUnit.Lines.Directories[f.DirectoryIndex - 1].Path, f.Path)
+                    : f.Path;
+            }
+        }
 
         // REV: properites or private fields
         public ulong Address;
