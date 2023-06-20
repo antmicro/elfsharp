@@ -137,8 +137,8 @@ namespace DWARF
                 this.LineRange = Parser.ReadUByte(sectionContent, ref cursor);
                 this.OpcodeBase = Parser.ReadUByte(sectionContent, ref cursor);
 
-                this.StandardOpcodeLengths = new uLeb128[this.OpcodeBase];
-                for(var i = 0; i < this.OpcodeBase; i++)
+                this.StandardOpcodeLengths = new uLeb128[StandardOpcodesCount];
+                for(var i = 0; i < this.StandardOpcodeLengths.Length; i++)
                 {
                     this.StandardOpcodeLengths[i] = Parser.ReadULeb128(sectionContent, ref cursor);
                 }
@@ -410,5 +410,7 @@ namespace DWARF
         private readonly byte[] sectionContent;
         private readonly Strings strings;
         private readonly Strings lineStrings;
+
+        private const int StandardOpcodesCount = 12;
     }
 }
