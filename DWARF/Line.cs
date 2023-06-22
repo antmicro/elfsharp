@@ -58,7 +58,7 @@ namespace DWARF
 
                 var f = CompilationUnit.Lines.Files[(int)(File - 1)];
                 return f.DirectoryIndex != 0
-                    ? Path.Combine(CompilationUnit.Lines.Directories[f.DirectoryIndex - 1].Path, f.Path)
+                    ? string.Format("{0}/{1}", CompilationUnit.Lines.Directories[f.DirectoryIndex - 1].Path, f.Path)
                     : f.Path;
             }
         }
