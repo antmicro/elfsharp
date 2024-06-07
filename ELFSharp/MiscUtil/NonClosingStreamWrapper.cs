@@ -189,6 +189,8 @@ namespace MiscUtil.IO
 			stream.Flush();
 		}
 
+// warning CS0672: Member overrides obsolete member 'MarshalByRefObject.InitializeLifetimeService()'.
+#pragma warning disable CS0672
 		/// <summary>
 		/// Throws a NotSupportedException.
 		/// </summary>
@@ -197,6 +199,7 @@ namespace MiscUtil.IO
 		{
 			throw new NotSupportedException();
 		}
+#pragma warning restore CS0672
 
 		/// <summary>
 		/// Returns the length of the underlying stream.
