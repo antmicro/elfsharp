@@ -42,6 +42,7 @@
     <Compile Include="MiscUtil\Endianness.cs" />
     <Compile Include="MiscUtil\LittleEndianBitConverter.cs" />
     <Compile Include="MiscUtil\NonClosingStreamWrapper.cs" />
+    <Compile Include="MiscUtil\Iterate.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="ELF\Consts.cs" />
     <Compile Include="ELF\Class.cs" />
@@ -94,6 +95,8 @@
     <Compile Include="MachO\SymbolTable.cs" />
     <Compile Include="MachO\Symbol.cs" />
     <Compile Include="PE\PE.cs" />
+    <Compile Include="PE\ImageDosHeader.cs" />
+    <Compile Include="PE\ImageOptionalHeader.cs" />
     <Compile Include="PE\ImageFileHeader.cs" />
     <Compile Include="PE\ImageExportDirectory.cs" />
     <Compile Include="PE\ImageSectionHeader.cs" />

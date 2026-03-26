@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.IO;
+using System.Linq;
+using MiscUtil;
 
 namespace ELFSharp.PE
 {
@@ -20,32 +21,66 @@ namespace ELFSharp.PE
             }
         }
 
-        public string[] GetExportedSymbols()
-        {
-            return namesTable.GetEntriesNames();
-        }
+        public string[] GetExportedSymbols() => ExportedSymbolsNames;
 
         private void Init(BinaryReader reader)
         {
-            reader.BaseStream.Seek(0x40, SeekOrigin.Current); // skip image dos header
-            reader.BaseStream.Seek(0x40, SeekOrigin.Current); // skip "This program cannot be run in DOS mode" part
-            reader.BaseStream.Seek(0x4, SeekOrigin.Current); // skip PE signature
-
+            var dosHeader = StreamToStructure<ImageDosHeader>(reader);
+            
+            reader.BaseStream.Seek(dosHeader.e_lfanew, SeekOrigin.Begin);
             fileHeader = StreamToStructure<ImageFileHeader>(reader);
-            reader.BaseStream.Seek(fileHeader.Is32BitHeader ? 0xE0 : 0xF0, SeekOrigin.Current); // skip optional header
+            var optionalHeaderRaw = reader.BaseStream.Position;
+            var sectionHeaderRaw = optionalHeaderRaw + fileHeader.SizeOfOptionalHeader;
 
-            sectionHeaders = new ImageSectionHeader[fileHeader.NumberOfSections];
-            for(var i = 0; i < sectionHeaders.Length; i++)
+            var optionalHeader32 = StreamToStructure<ImageOptionalHeader32>(reader);
+            var exportTableHeader = new ImageDataDirectory();
+            if(optionalHeader32.IsValid)
             {
-                sectionHeaders[i] = StreamToStructure<ImageSectionHeader>(reader);
+                 exportTableHeader = optionalHeader32.ExportTable;
+            }
+            else
+            {
+                reader.BaseStream.Seek(optionalHeaderRaw, SeekOrigin.Begin);
+                var optionalHeader64 = StreamToStructure<ImageOptionalHeader64>(reader);
+                if(!optionalHeader64.IsValid)
+                {
+                    return;
+                }
+                exportTableHeader = optionalHeader64.ExportTable;
             }
 
-            var exportDataSection = sectionHeaders.Single(x => x.Section == ExportDataSectionName);
-            reader.BaseStream.Seek(exportDataSection.PointerToRawData, SeekOrigin.Begin);
+            reader.BaseStream.Seek(sectionHeaderRaw, SeekOrigin.Begin);
+            sectionHeaders = Misc.Iterate<ImageSectionHeader>(() => StreamToStructure<ImageSectionHeader>(reader))
+                .Take(fileHeader.NumberOfSections).ToArray();
+
+            reader.BaseStream.Seek(VdaToRaw(exportTableHeader.VirtualAddress), SeekOrigin.Begin);
             var exportDirectory = StreamToStructure<ImageExportDirectory>(reader);
-            var namesTableFileOffset = exportDirectory.AddressOfNames - exportDataSection.VirtualAddress + exportDataSection.PointerToRawData;
-            reader.BaseStream.Seek(namesTableFileOffset, SeekOrigin.Begin);
-            namesTable = new NamesTable(reader, exportDirectory.NumberOfNames, exportDataSection.PointerToRawData - exportDataSection.VirtualAddress);
+
+            var nameTableAddress = VdaToRaw(exportDirectory.AddressOfNames);
+            var namesTable = new NamesTable(reader, nameTableAddress, exportDirectory.NumberOfNames, this);
+            ExportedSymbolsNames = namesTable.GetEntriesNames();
+        }
+
+        public UInt32 VdaToRaw(UInt32 vda)
+        {
+            TryFindSectionContaining(vda, out var foundSectionHeader);
+            var relativeToSection = vda - foundSectionHeader.VirtualAddress;
+            return foundSectionHeader.PointerToRawData + relativeToSection;
+        }
+
+        private bool TryFindSectionContaining(UInt32 vda, out ImageSectionHeader foundSectionHeader)
+        {
+            foundSectionHeader = new ImageSectionHeader();
+            var found = false;
+            foreach(var s in sectionHeaders)
+            {
+                if(s.VirtualAddress <= vda && vda < s.VirtualAddress + s.VirtualSize)
+                {
+                    found = true;
+                    foundSectionHeader = s;
+                }
+            }
+            return found;
         }
 
         private static T StreamToStructure<T>(BinaryReader reader) where T : struct
@@ -59,9 +94,7 @@ namespace ELFSharp.PE
 
         private ImageFileHeader fileHeader;
         private ImageSectionHeader[] sectionHeaders;
-        private NamesTable namesTable;
-
-        private static string ExportDataSectionName = ".edata";
+        private string[] ExportedSymbolsNames = new string[0];
     }
 }
 

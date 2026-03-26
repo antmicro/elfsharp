@@ -7,8 +7,9 @@ namespace ELFSharp.PE
 {
     public class NamesTable
     {
-        public NamesTable(BinaryReader reader, uint size, uint virtualAddressOffset)
+        public NamesTable(BinaryReader reader, uint nameTableAddress, uint size, PE pe)
         {
+            reader.BaseStream.Seek(nameTableAddress, SeekOrigin.Begin);
             entries = new Entry[size];
             for(var i = 0; i < entries.Length; i++)
             {
@@ -17,7 +18,7 @@ namespace ELFSharp.PE
 
             for(var i = 0; i < entries.Length; i++)
             {
-                reader.BaseStream.Seek(entries[i].NamePointer + virtualAddressOffset, SeekOrigin.Begin);
+                reader.BaseStream.Seek(pe.VdaToRaw(entries[i].NamePointer), SeekOrigin.Begin);
                 var name = new StringBuilder();
                 byte b;
                 do

@@ -7,6 +7,7 @@ namespace ELFSharp.PE
     [StructLayout(LayoutKind.Sequential)]
     public struct ImageFileHeader
     {
+        public UInt32 Magic;
         public UInt16 Machine;
         public UInt16 NumberOfSections;
         public UInt32 TimeDateStamp;
