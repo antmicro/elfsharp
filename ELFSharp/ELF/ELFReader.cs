@@ -33,23 +33,25 @@ namespace ELFSharp.ELF
 
 		public static Class CheckELFType(string fileName)
 		{
-			var size = new FileInfo(fileName).Length;
-			if(size < Consts.MinimalELFSize)
+			using(var stream = File.OpenRead(fileName))
 			{
-				return Class.NotELF;
-			}
-			using(var reader = new BinaryReader(File.OpenRead(fileName)))
-			{
-				var magic = reader.ReadBytes(4);
-				for(var i = 0; i < 4; i++)
+				if(stream.Length < Consts.MinimalELFSize)
 				{
-					if(magic[i] != Magic[i])
-					{
-						return Class.NotELF;
-					}
+					return Class.NotELF;
 				}
-				var value = reader.ReadByte();
-				return value == 1 ? Class.Bit32 : Class.Bit64;
+				using(var reader = new BinaryReader(File.OpenRead(fileName)))
+				{
+					var magic = reader.ReadBytes(4);
+					for(var i = 0; i < 4; i++)
+					{
+						if(magic[i] != Magic[i])
+						{
+							return Class.NotELF;
+						}
+					}
+					var value = reader.ReadByte();
+					return value == 1 ? Class.Bit32 : Class.Bit64;
+				}
 			}
 		}
         
