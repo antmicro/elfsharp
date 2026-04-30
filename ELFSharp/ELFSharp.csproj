@@ -8,7 +8,4 @@
     <AssemblyName>ELFSharp</AssemblyName>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="StringTable32.cs" />
-  </ItemGroup>
 </Project>
