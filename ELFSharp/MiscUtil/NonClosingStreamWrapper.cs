@@ -141,17 +141,6 @@ namespace MiscUtil.IO
 			closed = true;
 		}
 
-#if !NET
-		/// <summary>
-		/// Throws a NotSupportedException.
-		/// </summary>
-		/// <param name="requestedType">The Type of the object that the new ObjRef will reference.</param>
-		/// <returns>n/a</returns>
-		public override ObjRef CreateObjRef(Type requestedType)
-		{
-			throw new NotSupportedException();
-		}
-#endif
 		/// <summary>
 		/// Waits for the pending asynchronous read to complete.
 		/// </summary>
