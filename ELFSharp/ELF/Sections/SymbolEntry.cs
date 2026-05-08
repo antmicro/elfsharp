@@ -7,12 +7,8 @@ namespace ELFSharp.ELF.Sections
         public SymbolEntry<T> OffsetBy(T offset)
         {
             T offsetValue;
-            if(Value is uint)
+            if(Value is uint valueUint)
             {
-                // We know T is uint from above. We can't use `if(Value is ulong valueUlong)` because that
-                // results in invalid code generation on Mono 6.8.0.105+dfsg-3.3. The generated IL unconditionally
-                // attempts to store `Value` directly into a local of type int32 (copying it to a local first doesn't help).
-                var valueUint = (uint)(object)Value;
                 var offsetUint = (uint)(object)offset;
                 if(offsetUint == 0)
                 {
@@ -20,10 +16,8 @@ namespace ELFSharp.ELF.Sections
                 }
                 offsetValue = (T)(object)(valueUint + offsetUint);
             }
-            else if(Value is ulong)
+            else if(Value is ulong valueUlong)
             {
-                // See the comment above
-                var valueUlong = (ulong)(object)Value;
                 var offsetUlong = (ulong)(object)offset;
                 if(offsetUlong == 0)
                 {
